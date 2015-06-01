@@ -5,6 +5,10 @@ function h = vizP1Surf(o, varargin)
 %   parameters:
 %   showMesh
 
+Points = o.Points;
+Connectivity = o.Connectivity;
+ntri = length(o.surfh);
+nCutEle = o.nCutEle;
 
 if nargin > 1
     [h.fig,xf1] = xfigure(varargin{1});
@@ -12,13 +16,14 @@ else
     [h.fig,xf1] = xfigure;
 end
 
-axis equal; hold on;
-FV.Vertices = o.Points;
-FV.Faces = o.Connectivity;
-shading interp
-h.light = light;
+
+FV.Vertices = Points;
+FV.Faces = Connectivity;
 h.patch = patch(FV,'FaceColor','c','FaceLighting','gouraud');
-[az,el]=view(136,16);
+axis equal; hold on;
+h.light = light;
+% shading interp
+[az,el]=view();
 h.az = az;
 h.el = el;
 
@@ -27,10 +32,6 @@ if isenabled(param,varargin)
     h.mesh = showMesh(o);
 end
 
-
-
-ntri = length(o.Surface);
-nCutEle = o.nCutEle;
 
 title([num2str(ntri),' triangles on ',num2str(nCutEle),' cut Tet1 elements'])
 
@@ -51,7 +52,7 @@ IC = incenter(TR);
 h.FQ = quiver3(IC(:,1),IC(:,2),IC(:,3),FN(:,1),FN(:,2),FN(:,3),1,'Color','b');
 h.FQ.Visible = 'off';
 
-h.VQ = quiver3(o.Points(:,1),o.Points(:,2),o.Points(:,3), VN(:,1),VN(:,2),VN(:,3),1,'Color','r');
+h.VQ = quiver3(Points(:,1),Points(:,2),Points(:,3), VN(:,1),VN(:,2),VN(:,3),1,'Color','r');
 h.VQ.Visible = 'off';
 
 h.fig.KeyPressFcn = {@GKPFVizMesh,xf1,h};
